@@ -1,36 +1,13 @@
+import React from "react";
 import "./App.css";
-
-
-import { useState,useEffect, useRef } from "react";
+import * as tf from "@tensorflow/tfjs";
 import * as posenet from "@tensorflow-models/posenet";
-import * as tf from "@tensorflow/tfjs"
 import Webcam from "react-webcam";
-import { drawKeypoints, drawSkeleton } from "./canvas";
-function App() {
-  //webacm responsive logic
-  const [windowSize, setWindowSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
+import { drawKeypoints, drawSkeleton } from "./components/canvas";
+export default function App() {
+  const webcamRef = React.useRef(null);
+  const canvasRef = React.useRef(null);
 
-  const isLandscape= windowSize.height<=windowSize.width;
-  const ratio= isLandscape? windowSize.width/windowSize.height : windowSize.height/windowSize.width;
-  useEffect(() => {
-    function handleResize() {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    }
-    window.addEventListener("resize", handleResize);
-    handleResize();
-    return ()=>window.removeEventListener("resize",handleResize);
-  },[]);
-
-  //ai codes
-  const webcamRef=useRef(null);
-  const canvasRef=useRef(null);
-  tf.setBackend('cpu');
   const detectWebcamFeed = async (posenet_model) => {
     if (
       typeof webcamRef.current !== "undefined" &&
@@ -49,18 +26,16 @@ function App() {
       drawResult(pose, video, videoWidth, videoHeight, canvasRef);
     }
   };
-
   const runPosenet = async () => {
     const posenet_model = await posenet.load({
-      inputResolution: { width: windowSize.width, height: windowSize.height },
+      inputResolution: { width: 640, height: 480 },
       scale: 0.8
     });
-
+    //
     setInterval(() => {
       detectWebcamFeed(posenet_model);
-    }, 10000);
+    }, 100);
   };
-
   runPosenet();
   const drawResult = (pose, video, videoWidth, videoHeight, canvas) => {
     const ctx = canvas.current.getContext("2d");
@@ -69,14 +44,22 @@ function App() {
     drawKeypoints(pose["keypoints"], 0.6, ctx);
     drawSkeleton(pose["keypoints"], 0.7, ctx);
   };
-
   return (
-    <div>
-      <Webcam
+    <div className="App">
+      <header className="App-header">
+        <Webcam
           ref={webcamRef}
-          videoConstraints={{facingMode: 'user', aspectRatio: ratio}}
-          width={windowSize.width}
-          height={windowSize.height}
+          style={{
+            position: "absolute",
+            marginLeft: "auto",
+            marginRight: "auto",
+            left: 0,
+            right: 0,
+            textAlign: "center",
+            zindex: 9,
+            width: 640,
+            height: 480
+          }}
         />
         <canvas
           ref={canvasRef}
@@ -88,12 +71,11 @@ function App() {
             right: 0,
             textAlign: "center",
             zindex: 9,
+            width: 640,
+            height: 480
           }}
-          width={windowSize.width}
-          height={windowSize.height}
         />
+      </header>
     </div>
   );
 }
-
-export default App;
