@@ -9,9 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tensorflow-models/posenet": "^2.2.2",
     "@tensorflow/tfjs": "^3.21.0",
     "@tensorflow/tfjs-converter": "^3.21.0",
-    "@tensorflow-models/posenet": "^2.2.2",
     "next": "^15.2.4",
     "ollama": "^0.5.14",
     "onnxruntime-node": "^1.21.0",

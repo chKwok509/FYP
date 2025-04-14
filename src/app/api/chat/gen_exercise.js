@@ -32,7 +32,7 @@ function applySigmoidToArrayWithIndices(array) {
 // Define the handler for the API route
 export async function get_best_3(request) {
   try {
-    const modelPath = path.join(process.cwd(), 'public','two_tower_ctncf_simp.onnx');
+    const modelPath = path.join(process.cwd(), 'public','exercise_model','two_tower_ctncf_simp.onnx');
     const modelBuffer = await readFile(modelPath);
 
     // Create an InferenceSession with onnxruntime-web

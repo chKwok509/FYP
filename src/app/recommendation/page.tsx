@@ -3,7 +3,25 @@
 import React, { useState, useEffect } from "react";
 import "../globals.css";
 import ReactMarkdown from "react-markdown";
-const user = Math.floor(Math.random() * 3864);
+import { features } from "process";
+const user = Math.floor(Math.random() * 3864)
+
+const user_fixed={
+  Id:0,
+  Features:{
+    Sex: 0,
+    Age: 18,
+    Height: 1.68,
+    Weight: 47.5,
+    Hypertension: 0,
+    Diabetes: 0,
+    BMI: 16.8,
+    Level_Obuse: 0,
+    Level_Overweight: 0,
+    Level_Underweight: 1,
+    Fitness_Goal_Weight_Loss: 0
+  }
+}
 
 const RecommendationPage = () => {
   const [messages, setMessages] = useState([]);
@@ -26,7 +44,7 @@ const RecommendationPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: input, user: user ,context: context}),
+        body: JSON.stringify({ message: input, user: user_fixed.Id ,context: context, user_features:user_fixed.Features}),
       });
 
       if (!response.ok) {
